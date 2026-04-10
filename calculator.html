@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinPlan - ROI Calculator</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        if (!localStorage.getItem('finplan_session')) { window.location.href = 'login.html'; }
+        if (localStorage.getItem('finplan_theme') === 'dark') { document.documentElement.classList.add('dark-mode'); }
+    </script>
+</head>
+<body class="finplan-gradient-bg d-flex flex-column min-vh-100">
+
+<nav class="navbar navbar-dark bg-forestgreen shadow-sm py-2">
+    <div class="container d-flex justify-content-between align-items-center">
+        <a class="navbar-brand fw-bold d-flex align-items-center mb-0" href="dashboard.html">
+            <i class="fa-solid fa-leaf me-2"></i>FinPlan
+        </a>
+        <div class="d-flex align-items-center gap-3">
+            <div class="theme-pill d-flex align-items-center px-3 d-none d-md-flex">
+                <i class="fa-solid fa-sun nav-icon me-2"></i>
+                <div class="form-check form-switch mb-0">
+                    <input class="form-check-input" type="checkbox" id="themeToggle" style="cursor:pointer; width: 2em;">
+                </div>
+                <i class="fa-solid fa-moon nav-icon ms-2"></i>
+            </div>
+            <button id="logoutBtn" class="btn btn-pill-logout py-1 px-3">
+                <i class="fa-solid fa-right-from-bracket me-1 small"></i> Logout
+            </button>
+        </div>
+    </div>
+</nav>
+
+<div class="container my-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="fw-bold profile-header">Investment & ROI Suite</h2>
+            <p class="text-muted">Compare growth strategies and export your financial projections.</p>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-5">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body p-4">
+                    <h6 class="text-uppercase fw-bold small mb-4 section-label"><i class="fa-solid fa-sliders text-primary me-2"></i>Investment Parameters</h6>
+                    
+                    <form id="calcForm">
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold field-label">Starting Principal (RM)</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">RM</span>
+                                <input type="number" id="principal" class="form-control" placeholder="10000" required min="1">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold field-label">Expected Annual Return Rate (%)</label>
+                            <div class="input-group">
+                                <input type="number" step="0.1" id="rate" class="form-control" placeholder="e.g., 5.5 for Fixed Deposit" required>
+                                <span class="input-group-text bg-light">%</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label small fw-bold field-label">Investment Duration (Years)</label>
+                            <input type="number" id="years" class="form-control" placeholder="10" required min="1">
+                        </div>
+
+                        <button type="submit" class="btn btn-forestgreen w-100 py-2 fw-bold">Calculate Projection</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            <div class="card shadow-sm border-0 h-100 bg-mintgreen" style="background-color: rgba(216, 243, 220, 0.3) !important;">
+                <div class="card-body p-4 d-flex flex-column">
+                    <h6 class="text-uppercase fw-bold small mb-4 section-label"><i class="fa-solid fa-chart-pie text-primary me-2"></i>Growth Comparison</h6>
+                    
+                    <div class="row g-3 flex-grow-1">
+                        <div class="col-md-6">
+                            <div class="card border-0 shadow-sm h-100">
+                                <div class="card-body text-center p-4">
+                                    <h6 class="text-muted mb-3">Simple Interest Strategy</h6>
+                                    <h3 class="fw-bold text-charcoal mb-0" id="simpleROI">RM 0.00</h3>
+                                    <p class="small text-muted mt-2 mb-0" id="simpleProfit">Profit: RM 0.00</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="card border-0 shadow-sm h-100" style="border-bottom: 4px solid var(--primary) !important;">
+                                <div class="card-body text-center p-4">
+                                    <h6 class="text-primary fw-bold mb-3"><i class="fa-solid fa-arrow-trend-up me-1"></i>Compound Strategy</h6>
+                                    <h3 class="fw-bold text-primary mb-0" id="compoundROI">RM 0.00</h3>
+                                    <p class="small text-success mt-2 mb-0 fw-bold" id="compoundProfit">Profit: RM 0.00</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pt-3 border-top d-flex justify-content-between align-items-center">
+                        <span class="small text-muted" id="calcSummary">Enter values to generate a report.</span>
+                        <button id="exportCSV" class="btn btn-outline-forestgreen px-4 disabled"><i class="fa-solid fa-file-csv me-2"></i>Export Data</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="text-center py-4 text-muted border-top bg-white mt-auto">
+    <small>&copy; 2026 FinPlan - Web Programming Assignment</small>
+</footer>
+
+<script src="js/calculator.js"></script>
+</body>
+</html>

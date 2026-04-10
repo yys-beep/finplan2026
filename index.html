@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinPlan - Loading</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .loader-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--secondary);
+        }
+        .spinner-border { width: 3rem; height: 3rem; color: var(--primary); }
+    </style>
+</head>
+<body>
+
+    <div class="loader-container">
+        <div class="spinner-border mb-3" role="status"></div>
+        <h2 class="text-primary fw-bold">FinPlan</h2>
+        <p class="text-muted">Securing your financial data...</p>
+    </div>
+
+    <script>
+        // Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js')
+                .then(() => console.log("FinPlan: Service Worker Registered"))
+                .catch(err => console.log("SW Registration Failed:", err));
+        }
+
+        // Session Check & Redirect
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const session = localStorage.getItem('finplan_session');
+                if (session) {
+                    window.location.href = 'dashboard.html';
+                } else {
+                    window.location.href = 'login.html';
+                }
+            }, 1200); 
+        });
+    </script>
+</body>
+</html>

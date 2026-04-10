@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinPlan - Smart Recommendations</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2D6A4F">
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        if (!localStorage.getItem('finplan_session')) { window.location.href = 'login.html'; }
+        if (localStorage.getItem('finplan_theme') === 'dark') { document.documentElement.classList.add('dark-mode'); }
+    </script>
+</head>
+<body class="finplan-gradient-bg d-flex flex-column min-vh-100">
+
+<nav class="navbar navbar-dark bg-forestgreen shadow-sm py-2">
+    <div class="container d-flex justify-content-between align-items-center">
+        <a class="navbar-brand fw-bold d-flex align-items-center mb-0" href="dashboard.html">
+            <i class="fa-solid fa-leaf me-2"></i>FinPlan
+        </a>
+        </a>
+        <div class="d-flex align-items-center gap-3">
+            <div class="theme-pill d-flex align-items-center px-3 d-none d-md-flex">
+                <i class="fa-solid fa-sun nav-icon me-2"></i>
+                <div class="form-check form-switch mb-0">
+                    <input class="form-check-input" type="checkbox" id="themeToggle" style="cursor:pointer; width: 2em;">
+                </div>
+                <i class="fa-solid fa-moon nav-icon ms-2"></i>
+            </div>
+            <button id="logoutBtn" class="btn btn-pill-logout py-1 px-3">
+                <i class="fa-solid fa-right-from-bracket me-1 small"></i> Logout
+            </button>
+        </div>
+    </div>
+</nav>
+
+<div class="container my-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="fw-bold profile-header">AI Portfolio & Strategy</h2>
+            <p class="text-muted">Personalized asset allocation based on your risk profile and goals.</p>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-5">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body p-4 text-center d-flex flex-column justify-content-center">
+                    <h6 class="text-uppercase fw-bold small mb-4 section-label">Recommended Allocation</h6>
+                    <div style="position: relative; height:300px; width:100%">
+                        <canvas id="portfolioChart"></canvas>
+                    </div>
+                    <p class="small text-muted mt-4" id="chartCaption">Analyzing your risk profile...</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body p-4">
+                    <h6 class="text-uppercase fw-bold small mb-4 section-label"><i class="fa-solid fa-wand-magic-sparkles text-primary me-2"></i>Action Plan</h6>
+                    <div id="recommendationsList" class="d-flex flex-column gap-3">
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="text-center py-4 text-muted border-top bg-white mt-auto">
+    <small>&copy; 2026 FinPlan - Web Programming Assignment</small>
+</footer>
+
+<script src="js/recommendations.js"></script>
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('sw.js').catch(err => console.log('SW Registration failed: ', err));
+        });
+    }
+</script>
+</body>
+</html>

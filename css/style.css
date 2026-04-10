@@ -1,0 +1,363 @@
+/* ==========================================================================
+   1. ROOT VARIABLES & THEME PALETTE (Master Colors)
+   ========================================================================== */
+:root {
+    /* Light Mode Branding */
+    --primary: #2D6A4F;         /* Forest Green */
+    --primary-light: #40916c;   /* Lighter Green */
+    --secondary: #D8F3DC;       /* Mint Green */
+    --accent: #1B1B1B;          /* Charcoal */
+    
+    /* Light Mode Backgrounds & Text */
+    --bg-main: #F8F9FA;
+    --bg-card: #FFFFFF;
+    --text-main: #1B1B1B;
+    --text-muted: #6C757D;
+    --border-color: #DEE2E6;
+}
+
+html.dark-mode {
+    /* Dark Mode Branding */
+    --primary: #52B788;         /* Vibrant Mint for Dark Mode visibility */
+    --primary-light: #74c69d;
+    --secondary: #2D6A4F;       /* Deep Forest Green */
+    --accent: #FFFFFF;
+    
+    /* Dark Mode Backgrounds & Text */
+    --bg-main: #0A0A0A;         /* Deep Black */
+    --bg-card: #161616;         /* Dark Gray */
+    --text-main: #FFFFFF;       /* Pure White */
+    --text-muted: #B0B0B0;      /* Soft Gray */
+    --border-color: #2D2D2D;
+}
+
+/* ==========================================================================
+   2. GLOBAL STYLES & BACKGROUNDS
+   ========================================================================== */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Static Premium FinPlan Gradient (High Contrast) */
+.finplan-gradient-bg {
+    background: linear-gradient(135deg, #ffffff 0%, #b7e4c7 100%) !important;
+    background-attachment: fixed !important;
+}
+
+.dark-mode .finplan-gradient-bg {
+    background: linear-gradient(135deg, #121212 0%, #1b4332 100%) !important;
+    background-attachment: fixed !important;
+}
+
+/* Base Utility Colors */
+.text-primary { color: var(--primary) !important; }
+.text-charcoal { color: var(--accent); }
+.text-muted { color: var(--text-muted) !important; }
+.bg-forestgreen { background-color: var(--primary) !important; }
+.bg-mintgreen { background-color: var(--secondary) !important; }
+
+/* Borders & Spacing */
+.border-end, .border-top, .border-bottom { border-color: var(--border-color) !important; }
+.letter-spacing-lg { letter-spacing: 0.5rem; }
+
+/* ==========================================================================
+   3. CORE COMPONENTS (Buttons, Forms, Nav)
+   ========================================================================== */
+/* Buttons */
+.btn-forestgreen {
+    background-color: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+.btn-forestgreen:hover {
+    background-color: #1b4332;
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(45, 106, 79, 0.3);
+}
+
+.btn-outline-forestgreen {
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+.btn-outline-forestgreen:hover {
+    background-color: var(--primary);
+    color: white;
+}
+
+/* Forms & Inputs */
+.form-control, .form-select {
+    background-color: var(--bg-card);
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: var(--bg-card);
+    color: var(--text-main);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.25rem rgba(45, 106, 79, 0.15);
+}
+
+.form-control:disabled {
+    background-color: rgba(0,0,0,0.05);
+    opacity: 0.7;
+}
+
+/* Hide Default Browser Password Eye Icon */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+    display: none !important;
+}
+
+/* Navbar Pills (Theme & Logout) */
+.theme-pill {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50px;
+    height: 34px;
+}
+
+.theme-pill .form-check-input {
+    margin-top: 0.15rem;
+    background-color: rgba(0,0,0,0.3);
+    border-color: rgba(255,255,255,0.4);
+    cursor: pointer;
+    width: 2.5rem !important; 
+}
+
+.theme-pill .form-check-input:checked {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.nav-icon {
+    color: #FFFFFF !important;
+    font-size: 0.85rem;
+}
+
+.btn-pill-logout {
+    color: white;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.btn-pill-logout:hover {
+    background: white;
+    color: var(--primary) !important;
+    border-color: white;
+}
+
+/* ==========================================================================
+   4. LAYOUT MODULES (Cards, Dashboard, Images)
+   ========================================================================== */
+/* Generic Cards */
+.card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Dashboard Module Links */
+.module-card-link {
+    text-decoration: none !important;
+    color: inherit;
+    display: block;
+}
+
+.module-card-link .card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 25px rgba(255, 255, 255, 0.15) !important;
+}
+
+.module-card-link .card:hover .card-title {
+    color: var(--primary);
+}
+
+/* Dashboard Icons */
+.icon-box {
+    width: 65px;
+    height: 65px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    transition: background-color 0.3s ease;
+}
+
+/* Stat Cards */
+.stat-card h4 {
+    letter-spacing: -0.5px;
+}
+
+/* Profile Picture Avatar */
+#profilePic {
+    transition: border-color 0.3s ease;
+}
+
+/* Market Cards */
+.market-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.market-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important;
+}
+
+/* AI Advice Boxes */
+div[id^="aiAdvice-"] {
+    margin-top: 10px;
+    border-radius: 4px;
+    padding: 12px !important;
+    border-left: 5px solid transparent; 
+    transition: all 0.3s ease;
+}
+
+/* ==========================================================================
+   5. DARK MODE OVERRIDES (All consolidations live here)
+   ========================================================================== */
+   
+/* Force Base Background & Text */
+html.dark-mode body, html.dark-mode .bg-light {
+    background-color: var(--bg-main) !important;
+    color: var(--text-main) !important;
+}
+
+/* Consolidate All Headings & Primary Text to White */
+.dark-mode h1, .dark-mode h2, .dark-mode h3, .dark-mode h4, .dark-mode h5, .dark-mode h6,
+.dark-mode .card-title, .dark-mode #welcomeHeading, .dark-mode #displayDate, 
+.dark-mode .text-charcoal, .dark-mode .field-label, .dark-mode .profile-header, 
+.dark-mode .profile-name-text, .dark-mode .stat-card h4 {
+    color: var(--text-main) !important;
+}
+
+/* Consolidate All Subtext to Gray */
+.dark-mode p, .dark-mode small, .dark-mode .text-muted {
+    color: var(--text-muted) !important;
+}
+
+/* Highlight Text (Primary color swaps) */
+.dark-mode .text-primary, .dark-mode .section-label {
+    color: var(--primary-light) !important;
+}
+
+/* Module Specific Color Fixes */
+.dark-mode .stat-card, 
+.dark-mode .market-card, 
+.dark-mode .dark-bg-adjust, 
+.dark-mode footer {
+    background-color: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+.dark-mode footer small {
+    color: #A0A0A0 !important;
+}
+
+.dark-mode .danger-zone {
+    background-color: #1a1a1a !important;
+    border-color: #444 !important;
+}
+
+.dark-mode .bg-mintgreen {
+    background-color: #1a2c22 !important; /* Deep dark green */
+}
+
+/* Form Controls in Dark Mode */
+.dark-mode .form-control, .dark-mode .form-select {
+    background-color: #222 !important;
+    color: #fff !important;
+    border-color: #444 !important;
+}
+
+.dark-mode .input-group-text {
+    background-color: #222 !important;
+    border-color: #444 !important;
+    color: var(--primary-light) !important;
+}
+
+.dark-mode input#searchNews {
+    padding-left: 10px !important; 
+}
+
+/* Dashboard Badges & Icons in Dark Mode */
+.dark-mode .badge.bg-mintgreen {
+    background-color: #1B4332 !important;
+    color: var(--primary-light) !important; 
+}
+
+.dark-mode .icon-box {
+    background-color: rgba(82, 183, 136, 0.15) !important; 
+    color: var(--primary-light) !important;
+}
+
+.dark-mode .icon-box i {
+    color: var(--primary-light) !important;
+}
+
+.dark-mode .module-card-link .card:hover {
+    border-color: var(--primary-light) !important;
+    box-shadow: 0 8px 25px rgba(82, 183, 136, 0.2) !important;
+}
+
+.dark-mode #profilePic {
+    border-color: var(--primary) !important;
+}
+
+/* Specific Native UI Overrides in Dark Mode */
+.dark-mode .divider-line, .dark-mode .navbar {
+    border-color: var(--border-color) !important;
+}
+
+.dark-mode .form-select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e") !important;
+}
+
+.dark-mode input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+}
+
+/* AI Advice Text Colors */
+.dark-mode div[id^="aiAdvice-"] {
+    background-color: #1a1a1a !important; 
+    border-left: 4px solid var(--primary-light) !important;
+    color: #ffffff !important; 
+}
+
+.dark-mode .verdict-red { color: #ff6b6b !important; font-weight: bold; }
+.dark-mode .verdict-yellow { color: #ffd93d !important; font-weight: bold; }
+.dark-mode .verdict-green { color: #6bffbb !important; font-weight: bold; }
+
+/* Buttons in Dark Mode */
+.dark-mode .btn-outline-forestgreen {
+    color: var(--primary-light);
+    border-color: var(--primary-light);
+}
+
+.dark-mode .btn-outline-forestgreen:hover {
+    background-color: var(--primary-light);
+    color: #1a1a1a;
+}
+
+/* --- Fix: Keep text inside white containers pure white in Dark Mode --- */
+.dark-mode .text-white,
+.dark-mode .text-white p,
+.dark-mode .text-white small {
+    color: #FFFFFF !important;
+    opacity: 1 !important;
+}

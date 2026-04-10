@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinPlan - Security & Access</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        if (!localStorage.getItem('finplan_session')) { window.location.href = 'login.html'; }
+        if (localStorage.getItem('finplan_theme') === 'dark') { document.documentElement.classList.add('dark-mode'); }
+    </script>
+</head>
+<body class="finplan-gradient-bg d-flex flex-column min-vh-100">
+
+<nav class="navbar navbar-dark bg-forestgreen shadow-sm py-2">
+    <div class="container d-flex justify-content-between align-items-center">
+        <a class="navbar-brand fw-bold d-flex align-items-center mb-0" href="dashboard.html">
+            <i class="fa-solid fa-leaf me-2"></i>FinPlan
+        </a>
+        <div class="d-flex align-items-center gap-3">
+            <div class="theme-pill d-flex align-items-center px-3 d-none d-md-flex">
+                <i class="fa-solid fa-sun nav-icon me-2"></i>
+                <div class="form-check form-switch mb-0">
+                    <input class="form-check-input" type="checkbox" id="themeToggle" style="cursor:pointer; width: 2em;">
+                </div>
+                <i class="fa-solid fa-moon nav-icon ms-2"></i>
+            </div>
+            <button id="logoutBtn" class="btn btn-pill-logout py-1 px-3">
+                <i class="fa-solid fa-right-from-bracket me-1 small"></i> Logout
+            </button>
+        </div>
+    </div>
+</nav>
+
+<div class="container my-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="fw-bold profile-header">Security & Access Control</h2>
+            <p class="text-muted">Manage your authentication methods and keep your account secure.</p>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-5">
+            <div class="card shadow-sm border-0 mb-4 h-100">
+                <div class="card-body p-4">
+                    <h6 class="text-uppercase fw-bold small mb-4 section-label"><i class="fa-solid fa-shield-halved text-primary me-2"></i>Two-Factor Authentication</h6>
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-3 p-3 border rounded-3 bg-white dark-bg-adjust">
+                        <div>
+                            <h6 class="mb-1 fw-bold">Email OTP verification</h6>
+                            <p class="small text-muted mb-0">Require an OTP sent to your email on every login.</p>
+                        </div>
+                        <div class="form-check form-switch fs-4 mb-0">
+                            <input class="form-check-input" type="checkbox" id="toggle2FA" checked>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info border-0 bg-mintgreen text-dark small mt-4">
+                        <i class="fa-solid fa-circle-info me-2 text-primary"></i> 2FA is currently managed by the System (Member A). Disabling it here may log you out.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body p-4">
+                    <h6 class="text-uppercase fw-bold small mb-4 section-label"><i class="fa-solid fa-key text-primary me-2"></i>Change Password</h6>
+                    
+                    <form id="passwordForm">
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold field-label">Current Password</label>
+                            <div class="position-relative">
+                                <input type="password" class="form-control pe-5" id="currentPassword" required>
+                                <i class="fa-regular fa-eye position-absolute top-50 end-0 translate-middle-y me-3 toggle-password" 
+                                data-target="currentPassword" 
+                                style="cursor: pointer; color: #6c757d; font-size: 1.1rem;"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold field-label">New Password</label>
+                            <div class="position-relative">
+                                <input type="password" class="form-control pe-5" id="newPassword" required>
+                                <i class="fa-regular fa-eye position-absolute top-50 end-0 translate-middle-y me-3 toggle-password" 
+                                data-target="newPassword" 
+                                style="cursor: pointer; color: #6c757d; font-size: 1.1rem;"></i>
+                            </div>
+                            
+                            <div class="progress mt-2" style="height: 6px;">
+                                <div class="progress-bar" id="strengthBar" role="progressbar" style="width: 0%;"></div>
+                            </div>
+                            <p class="small text-muted mt-1 mb-0" id="strengthText">Enter a new password</p>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label small fw-bold field-label">Confirm New Password</label>
+                            <div class="position-relative">
+                                <input type="password" class="form-control pe-5" id="confirmPassword" required>
+                                <i class="fa-regular fa-eye position-absolute top-50 end-0 translate-middle-y me-3 toggle-password" 
+                                data-target="confirmPassword" 
+                                style="cursor: pointer; color: #6c757d; font-size: 1.1rem;"></i>
+                            </div>
+                            <div class="invalid-feedback">Passwords do not match.</div>
+                        </div>
+
+                        <button type="submit" class="btn btn-forestgreen px-4" id="savePasswordBtn" disabled>Update Password</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="text-center py-4 text-muted border-top bg-white mt-auto">
+    <small>&copy; 2026 FinPlan - Web Programming Assignment</small>
+</footer>
+
+<script src="js/security.js"></script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinPlan - My Profile</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        if (localStorage.getItem('finplan_theme') === 'dark') {
+            document.documentElement.classList.add('dark-mode');
+        }
+    </script>
+</head>
+<body class="finplan-gradient-bg d-flex flex-column min-vh-100">
+
+<nav class="navbar navbar-dark bg-forestgreen shadow-sm py-2">
+    <div class="container d-flex justify-content-between align-items-center">
+        <a class="navbar-brand fw-bold d-flex align-items-center mb-0" href="dashboard.html">
+            <i class="fa-solid fa-leaf me-2"></i>FinPlan
+        </a>
+
+        <div class="d-flex align-items-center gap-3">
+            <div class="theme-pill d-flex align-items-center px-3">
+                <i class="fa-solid fa-sun nav-icon me-2"></i>
+                <div class="form-check form-switch mb-0">
+                    <input class="form-check-input" type="checkbox" id="themeToggle" style="cursor:pointer; width: 2em;">
+                </div>
+                <i class="fa-solid fa-moon nav-icon ms-2"></i>
+            </div>
+            <button id="logoutBtn" class="btn btn-pill-logout py-1 px-3">
+                <i class="fa-solid fa-right-from-bracket me-1 small"></i> Logout
+            </button>
+        </div>
+    </div>
+</nav>
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <h3 class="fw-bold mb-4 profile-header">Profile Settings</h3>
+                    
+                    <div class="row">
+                        <div class="col-md-4 text-center border-end">
+                            <div class="position-relative d-inline-block">
+                                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCI+PGNpcmNsZSBjeD0iMjQiIGN5PSIyNCIgcj0iMjMiIGZpbGw9IiNlOWVjZWYiLz48cGF0aCBkPSJNMjQsMjBDMTkuNTgyLDIwLDE2LDE2LjQxOCwxNiwxMmMwLTMuMzI5LDIuMTg1LTUuMTQ3LDQuNDQ5LTYuMTA0QzIwLjg3NSw1LjY3NCwyMi4zNzUsNSwyNCw1czMuMTI1LDAuNjczLDMuNTUxLDAuODk2QzI5LjgxNSw2Ljg1MywzMiw4LjY3MSwzMiwxMkMzMiwxNi40MTgsMjguNDE4LDIwLDI0LDIwTTEyLDQwYy0yLjIwOSwwLTQtMS43OTEtNC00di0xYzAtNi42MjcsNS4zNzMtMTIsMTItMTJoOGM2LjYyNywwLDEyLDUuMzczLDEyLDEydjFjMCwyLjIwOS0xLjc5MSw0LTQsNGgzQyIvPjwvc3ZnPg==" 
+                                     alt="Profile Picture" 
+                                     class="rounded-circle img-thumbnail mb-3 shadow-sm" 
+                                     id="profilePic" 
+                                     style="width: 150px; height: 150px; object-fit: cover; background-color: #f8f9fa; border: 3px solid #fff;">
+                                
+                                <label for="uploadPic" class="btn btn-forestgreen position-absolute rounded-circle shadow d-flex align-items-center justify-content-center" 
+                                       style="bottom: 15px; right: 5px; width: 35px; height: 35px; padding: 0;">
+                                    <i class="fa-solid fa-camera text-white small"></i>
+                                </label>
+                            </div>
+                            <input type="file" id="uploadPic" class="d-none" accept="image/*">
+                            
+                            <h5 id="displayName" class="mt-3 fw-bold profile-name-text">User Name</h5>
+                            <p class="text-muted small px-3" id="displayBio">Your financial journey starts here.</p>
+                        </div>
+
+                        <div class="col-md-8 ps-md-4">
+                            <form id="profileForm">
+                                <h6 class="text-uppercase fw-bold small mb-3 section-label">Personal Details</h6>
+                                <div class="row g-2 mb-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-bold field-label">Full Name</label>
+                                        <input type="text" class="form-control" id="userName">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-bold field-label">Birth Date</label>
+                                        <input type="date" class="form-control" id="userDOB">
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold field-label">Bio</label>
+                                    <textarea class="form-control" id="userBio" rows="2"></textarea>
+                                </div>
+
+                                <h6 class="text-uppercase fw-bold small mb-3 mt-4 section-label">Financial Profile</h6>
+                                <div class="row g-2 mb-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-bold field-label">Monthly Income (RM)</label>
+                                        <input type="number" class="form-control" id="userIncome">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-bold field-label">Employment</label>
+                                        <select class="form-select" id="userEmployment">
+                                            <option value="Employed">Employed</option>
+                                            <option value="Self-Employed">Self-Employed</option>
+                                            <option value="Student">Student</option>
+                                            <option value="Unemployed">Unemployed</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row g-2 mb-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-bold field-label">Financial Goal</label>
+                                        <input type="text" class="form-control" id="userGoal">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-bold field-label">Risk Level</label>
+                                        <select class="form-select" id="userRisk">
+                                            <option value="Low">Low</option>
+                                            <option value="Medium">Medium</option>
+                                            <option value="High">High</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <hr class="my-4 divider-line">
+                                <button type="submit" class="btn btn-forestgreen text-white px-4">Save All Changes</button>
+                            </form>
+
+                            <hr class="my-4 divider-line">
+                            <div class="danger-zone p-3 rounded-3 border">
+                                <h6 class="text-danger fw-bold small mb-1">Danger Zone</h6>
+                                <p class="text-muted small">Once you delete your account, there is no going back.</p>
+                                <button type="button" id="deleteAccount" class="btn btn-outline-danger btn-sm">Delete My Account</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="js/profile.js"></script>
+</body>
+</html>
