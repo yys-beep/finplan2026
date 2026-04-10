@@ -43,11 +43,17 @@ document.addEventListener('DOMContentLoaded', () => {
         
         try {
             // Detect if running locally or on the web
+            // Check if running on VS Code Live Server (Local) or Netlify
             const hostname = window.location.hostname;
             const isLocal = hostname === '127.0.0.1' || hostname === 'localhost';
-            const API_BASE = isLocal ? 'http://localhost:3000' : ''; 
+            
+            // If local, we can test using Netlify Dev or just bypass to a local URL if needed.
+            // But for deployment, the URL must point to the Netlify Function:
+            const API_URL = isLocal 
+                ? `/.netlify/functions/news?q=${encodeURIComponent(query)}` 
+                : `/.netlify/functions/news?q=${encodeURIComponent(query)}`;
 
-            const res = await fetch(`${API_BASE}/news?q=${encodeURIComponent(query)}`);
+            const res = await fetch(API_URL);
             const data = await res.json();
             
             newsList.innerHTML = '';
