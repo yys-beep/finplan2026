@@ -2,6 +2,7 @@
  * FinPlan Market Insights Logic
  */
 
+
 document.addEventListener('DOMContentLoaded', () => {
     // --- 1. THEME & LOGOUT LOGIC ---
     const themeToggle = document.getElementById('themeToggle');
@@ -41,7 +42,12 @@ document.addEventListener('DOMContentLoaded', () => {
         newsList.innerHTML = '<div class="col-12 text-center py-5"><div class="spinner-border text-primary" role="status"></div><p class="mt-2 text-muted">Analyzing market data...</p></div>';
         
         try {
-            const res = await fetch(`/news?q=${encodeURIComponent(query)}`);
+            // Detect if running locally or on the web
+            const hostname = window.location.hostname;
+            const isLocal = hostname === '127.0.0.1' || hostname === 'localhost';
+            const API_BASE = isLocal ? 'http://localhost:3000' : ''; 
+
+            const res = await fetch(`${API_BASE}/news?q=${encodeURIComponent(query)}`);
             const data = await res.json();
             
             newsList.innerHTML = '';
