@@ -1,12 +1,18 @@
+// 1. Import all your required packages first
 const express = require('express');
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 require('dotenv').config();
 const cors = require('cors');
 
+// 2. Initialize the app
 const app = express();
 app.use(cors());
 
-// API route (your frontend will call this)
+// 3. Serve your static files (HTML, CSS, JS) to the web
+// (This must come AFTER 'const app = express();')
+app.use(express.static(__dirname));
+
+// 4. API route (your frontend will call this)
 app.get('/news', async (req, res) => {
     const query = req.query.q || 'finance';
 
@@ -22,5 +28,9 @@ app.get('/news', async (req, res) => {
     }
 });
 
-app.listen(3000, () => console.log('Server running on http://localhost:3000'));
-console.log("API KEY:", process.env.NEWS_API_KEY);
+// 5. Dynamic Port (Crucial for Render.com Deployment)
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+    console.log("API KEY LOADED:", process.env.NEWS_API_KEY ? "Yes (Hidden for security)" : "Missing!");
+});

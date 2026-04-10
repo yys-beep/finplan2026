@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
         newsList.innerHTML = '<div class="col-12 text-center py-5"><div class="spinner-border text-primary" role="status"></div><p class="mt-2 text-muted">Analyzing market data...</p></div>';
         
         try {
-            const res = await fetch(`http://localhost:3000/news?q=${encodeURIComponent(query)}`);
+            const res = await fetch(`/news?q=${encodeURIComponent(query)}`);
             const data = await res.json();
             
             newsList.innerHTML = '';

@@ -85,20 +85,34 @@
 
             <h6 class="text-forestgreen fw-bold mb-3 border-bottom pb-2">2. Credentials</h6>
             <div class="mb-3">
-                <label class="form-label small">Email</label>
+                <label class="form-label small fw-bold">Email</label>
                 <input type="email" class="form-control form-control-sm" id="regEmail" required>
             </div>
-            <div class="row g-2 mb-3">
-                <div class="col-md-6">
-                    <label class="form-label small">Password</label>
-                    <input type="password" class="form-control form-control-sm" id="regPassword" required>
+            <div class="row g-2 mb-4"> <div class="col-md-6">
+                    <label class="form-label small fw-bold">Password</label>
+                    <div class="position-relative">
+                        <input type="password" class="form-control form-control-sm pe-5" id="regPassword" required>
+                        <i class="fa-regular fa-eye position-absolute top-50 end-0 translate-middle-y me-3 toggle-password" 
+                        data-target="regPassword" 
+                        style="cursor: pointer; color: #6c757d; font-size: 0.9rem;"></i>
+                    </div>
+                    <div class="progress mt-2" style="height: 5px;">
+                        <div id="strengthBar" class="progress-bar" role="progressbar" style="width: 0%;"></div>
+                    </div>
+                    <p class="small text-muted mt-1 mb-0" id="regStrengthText" style="font-size: 0.75rem;">Enter a new password</p>
                 </div>
+                
                 <div class="col-md-6">
-                    <label class="form-label small">Confirm Password</label>
-                    <input type="password" class="form-control form-control-sm" id="confirmPassword" required>
+                    <label class="form-label small fw-bold">Confirm Password</label>
+                    <div class="position-relative">
+                        <input type="password" class="form-control form-control-sm pe-5" id="confirmPassword" required>
+                        <i class="fa-regular fa-eye position-absolute top-50 end-0 translate-middle-y me-3 toggle-password" 
+                        data-target="confirmPassword" 
+                        style="cursor: pointer; color: #6c757d; font-size: 0.9rem;"></i>
+                    </div>
+                    <p class="small text-muted mt-1 mb-0" id="regMatchText" style="font-size: 0.75rem;">Passwords must match</p>
                 </div>
             </div>
-            <div class="progress mb-2" style="height: 5px;"><div id="strengthBar" class="progress-bar"></div></div>
 
             <h6 class="text-forestgreen fw-bold mb-3 border-bottom pb-2">3. Financial Profile</h6>
             <div class="row g-2 mb-3">
