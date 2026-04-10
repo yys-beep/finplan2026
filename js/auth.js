@@ -161,31 +161,30 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (p2.length === 0) {
             // Empty confirm field
-            confirmPasswordInput.classList.remove('is-invalid', 'is-valid');
+            confirmPasswordInput.classList.remove('is-invalid', 'is-valid', 'border-danger', 'border-success');
             if (regMatchText) {
                 regMatchText.textContent = 'Passwords must match';
                 regMatchText.className = 'small text-muted mt-1 mb-0';
             }
         } else if (!match) {
             // Typing, but doesn't match yet
-            confirmPasswordInput.classList.add('is-invalid');
-            confirmPasswordInput.classList.remove('is-valid');
+            confirmPasswordInput.classList.remove('is-invalid', 'is-valid', 'border-success');
+            confirmPasswordInput.classList.add('border-danger'); 
             if (regMatchText) {
                 regMatchText.textContent = 'Passwords do not match';
                 regMatchText.className = 'small text-danger mt-1 mb-0';
             }
         } else {
             // Perfect match
-            confirmPasswordInput.classList.remove('is-invalid');
-            confirmPasswordInput.classList.add('is-valid'); // Adds a nice green border
+            confirmPasswordInput.classList.remove('is-invalid', 'is-valid', 'border-danger');
+            confirmPasswordInput.classList.add('border-success'); 
             if (regMatchText) {
                 regMatchText.textContent = 'Passwords match!';
                 regMatchText.className = 'small text-success mt-1 mb-0';
             }
         }
 
-        // The button stays disabled until it matches AND is strong enough
-        if (regSubmitBtn) regSubmitBtn.disabled = !(regIsStrongEnough && match);
+        // REMOVED THE BUTTON DISABLED LOGIC FROM HERE!
     }
 
 
