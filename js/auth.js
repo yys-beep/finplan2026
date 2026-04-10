@@ -65,54 +65,108 @@ document.addEventListener('DOMContentLoaded', () => {
     const resetPasswordForm = document.getElementById('resetPasswordForm');
     const authSubtitle = document.getElementById('authSubtitle');
 
-    // Show Register
+    // Toggle helper to reset UI
+    const showForm = (toShow) => {
+        [loginForm, registerForm, otpForm, forgotPasswordForm, resetPasswordForm].forEach(f => f?.classList.add('d-none'));
+        toShow.classList.remove('d-none');
+    };
+
     document.getElementById('showRegister')?.addEventListener('click', (e) => {
         e.preventDefault();
-        loginForm.classList.add('d-none');
-        registerForm.classList.remove('d-none');
+        showForm(registerForm);
         authSubtitle.textContent = "Create your account";
     });
 
-    // Back to Login from Register
     document.getElementById('showLogin')?.addEventListener('click', (e) => {
         e.preventDefault();
-        registerForm.classList.add('d-none');
-        loginForm.classList.remove('d-none');
+        showForm(loginForm);
         authSubtitle.textContent = "Your secure financial gateway";
     });
 
-    // Show Forgot Password Form
     document.getElementById('showForgot')?.addEventListener('click', (e) => {
         e.preventDefault();
-        loginForm.classList.add('d-none');
-        forgotPasswordForm.classList.remove('d-none');
+        showForm(forgotPasswordForm);
         authSubtitle.textContent = "Password Recovery";
     });
 
-    // Back to Login from Forgot Password
     document.getElementById('backToLoginFromForgot')?.addEventListener('click', (e) => {
         e.preventDefault();
-        forgotPasswordForm.classList.add('d-none');
-        loginForm.classList.remove('d-none');
+        showForm(loginForm);
         authSubtitle.textContent = "Your secure financial gateway";
     });
 
 
     // ==========================================
-    // 4. REGISTRATION LOGIC
+    // 4. REGISTRATION STRENGTH METER & VALIDATION
+    // ==========================================
+    const regPasswordInput = document.getElementById('regPassword');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
+    const regStrengthBar = document.getElementById('strengthBar');
+    const regSubmitBtn = registerForm?.querySelector('button[type="submit"]');
+    
+    let regIsStrongEnough = false;
+
+    if (regPasswordInput && regStrengthBar) {
+        regPasswordInput.addEventListener('input', () => {
+            const val = regPasswordInput.value;
+            let score = 0;
+
+            if (val.length >= 8) score++; 
+            if (/[A-Z]/.test(val)) score++; 
+            if (/[0-9]/.test(val)) score++; 
+            if (/[^A-Za-z0-9]/.test(val)) score++; 
+
+            regStrengthBar.className = 'progress-bar'; 
+            
+            if (val.length === 0) {
+                regStrengthBar.style.width = '0%';
+                regIsStrongEnough = false;
+            } else if (score <= 2) {
+                regStrengthBar.style.width = '33%';
+                regStrengthBar.classList.add('bg-danger');
+                regIsStrongEnough = false;
+            } else if (score === 3) {
+                regStrengthBar.style.width = '66%';
+                regStrengthBar.classList.add('bg-warning');
+                regIsStrongEnough = true; // Moderate is allowed
+            } else {
+                regStrengthBar.style.width = '100%';
+                regStrengthBar.classList.add('bg-success');
+                regIsStrongEnough = true; // Strong is perfect
+            }
+            validateRegForm();
+        });
+    }
+
+    if (confirmPasswordInput) {
+        confirmPasswordInput.addEventListener('input', validateRegForm);
+    }
+
+    function validateRegForm() {
+        const p1 = regPasswordInput.value;
+        const p2 = confirmPasswordInput.value;
+        const match = p1 === p2 && p2.length > 0;
+        
+        if (p2.length > 0 && !match) {
+            confirmPasswordInput.classList.add('is-invalid');
+        } else {
+            confirmPasswordInput.classList.remove('is-invalid');
+        }
+
+        // Enable button only if password is at least "Moderate" AND they match
+        if (regSubmitBtn) regSubmitBtn.disabled = !(regIsStrongEnough && match);
+    }
+
+
+    // ==========================================
+    // 5. REGISTRATION SUBMISSION
     // ==========================================
     if (registerForm) {
         registerForm.addEventListener('submit', (e) => {
             e.preventDefault();
             
             const email = document.getElementById('regEmail').value.trim();
-            const password = document.getElementById('regPassword').value;
-            const confirm = document.getElementById('confirmPassword').value;
-            
-            if (password !== confirm) {
-                alert("Passwords do not match!");
-                return;
-            }
+            const password = regPasswordInput.value;
 
             const userData = {
                 name: document.getElementById('regName').value,
@@ -124,47 +178,36 @@ document.addEventListener('DOMContentLoaded', () => {
                 risk: document.getElementById('regRisk').value,
             };
 
-            // Save to LocalStorage
             localStorage.setItem(`user_${email}`, JSON.stringify(userData));
             
-            alert("Registration successful! You can now log in.");
+            alert("Registration successful! Your account is secured. Please log in.");
             
-            // Switch back to login
             registerForm.reset();
-            registerForm.classList.add('d-none');
-            loginForm.classList.remove('d-none');
+            regStrengthBar.style.width = '0%';
+            showForm(loginForm);
             authSubtitle.textContent = "Your secure financial gateway";
-            
-            // Helpful dev alert
-            console.log(`New user registered: ${email}`);
         });
     }
 
 
     // ==========================================
-    // 5. BULLETPROOF LOGIN & OTP LOGIC
+    // 6. LOGIN & OTP FLOW
     // ==========================================
     let currentLoginEmail = "";
 
     if (loginForm) {
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault(); 
-            
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value;
-            const userKey = `user_${email}`;
-            
-            const userData = JSON.parse(localStorage.getItem(userKey));
+            const userData = JSON.parse(localStorage.getItem(`user_${email}`));
 
             if (userData && userData.password === password) {
-                // Success -> Show OTP
                 currentLoginEmail = email; 
-                loginForm.classList.add('d-none');
-                otpForm.classList.remove('d-none');
+                showForm(otpForm);
                 authSubtitle.textContent = "Two-Factor Authentication";
             } else {
-                // Fail -> Clear password field only
-                alert("Invalid email or password. Please try again.");
+                alert("Invalid credentials.");
                 document.getElementById('loginPassword').value = ''; 
             }
         });
@@ -173,10 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (otpForm) {
         otpForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            const otp = document.getElementById('otpInput').value;
-
-            if (otp === "123456") {
-                // Grant Access & Redirect
+            if (document.getElementById('otpInput').value === "123456") {
                 localStorage.setItem('finplan_session', Date.now());
                 localStorage.setItem('finplan_active_user_email', currentLoginEmail);
                 window.location.href = 'dashboard.html';
@@ -188,61 +228,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // ==========================================
-    // 6. FORGOT PASSWORD / RESET LOGIC
+    // 7. FORGOT PASSWORD LOGIC
     // ==========================================
     let emailToReset = "";
 
-    // Step 1: Request Code
-    if (forgotPasswordForm) {
-        forgotPasswordForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const email = document.getElementById('resetEmail').value.trim();
-            const userKey = `user_${email}`;
-            
-            if (!localStorage.getItem(userKey)) {
-                alert("Error: No account found with that email address.");
-                return;
-            }
+    forgotPasswordForm?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('resetEmail').value.trim();
+        if (!localStorage.getItem(`user_${email}`)) {
+            alert("Account not found.");
+            return;
+        }
+        emailToReset = email;
+        showForm(resetPasswordForm);
+    });
 
-            emailToReset = email;
-            forgotPasswordForm.classList.add('d-none');
-            resetPasswordForm.classList.remove('d-none');
-        });
-    }
+    resetPasswordForm?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const code = document.getElementById('resetCode').value;
+        const newPassword = document.getElementById('newResetPassword').value;
 
-    // Step 2: Verify Code and Save New Password
-    if (resetPasswordForm) {
-        resetPasswordForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const code = document.getElementById('resetCode').value;
-            const newPassword = document.getElementById('newResetPassword').value;
-
-            if (code !== "888888") {
-                alert("Invalid verification code! Please try 888888.");
-                return;
-            }
-
-            if (newPassword.length < 6) {
-                alert("Password must be at least 6 characters long.");
-                return;
-            }
-
-            // Update user password in LocalStorage
-            const userKey = `user_${emailToReset}`;
-            const userData = JSON.parse(localStorage.getItem(userKey));
-            
+        if (code === "888888" && newPassword.length >= 8) {
+            const userData = JSON.parse(localStorage.getItem(`user_${emailToReset}`));
             userData.password = newPassword; 
-            localStorage.setItem(userKey, JSON.stringify(userData)); 
+            localStorage.setItem(`user_${emailToReset}`, JSON.stringify(userData)); 
 
-            alert("Success! Your password has been updated. Please sign in with your new password.");
-            
-            resetPasswordForm.classList.add('d-none');
-            loginForm.classList.remove('d-none');
-            authSubtitle.textContent = "Your secure financial gateway";
-            
-            forgotPasswordForm.reset();
-            resetPasswordForm.reset();
-        });
-    }
-
+            alert("Password updated! Log in now.");
+            showForm(loginForm);
+        } else {
+            alert("Verification failed or password too short (min 8 chars).");
+        }
+    });
 });

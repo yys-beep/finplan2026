@@ -1,6 +1,5 @@
 /**
  * FinPlan Recommendations & Visualization
- * Managed by Member F
  */
 
 document.addEventListener('DOMContentLoaded', () => {

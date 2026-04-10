@@ -1,6 +1,5 @@
 /**
  * FinPlan Security & Access Logic
- * Managed by Member B
  */
 
 document.addEventListener('DOMContentLoaded', () => {
