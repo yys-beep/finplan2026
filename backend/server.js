@@ -1,5 +1,6 @@
 // 1. Import all your required packages first
 const express = require('express');
+const path = require('path');
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 require('dotenv').config();
 const cors = require('cors');
@@ -10,7 +11,7 @@ app.use(cors());
 
 // 3. Serve your static files (HTML, CSS, JS) to the web
 // (This must come AFTER 'const app = express();')
-app.use(express.static(__dirname));
+app.use(express.static(path.join(__dirname, '..')));
 
 // 4. API route (your frontend will call this)
 app.get('/news', async (req, res) => {
