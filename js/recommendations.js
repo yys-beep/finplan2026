@@ -105,20 +105,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // ===== RULE 1: RISK-BASED ADVICE =====
     if (riskLevel === 'Low') {
         recs.push({ 
-            icon: 'fa-shield-halved', 
-            text: '🛡️ <b>Capital Preservation Focus:</b> Prioritize safety. Look into Amanah Saham Bumiputera (ASB) or high-yield Fixed Deposits. Target 5-6% annual returns.',
+            icon: 'fa-shield-alt', 
+            text: ' <b>Capital Preservation Focus:</b> Prioritize safety. Look into Amanah Saham Bumiputera (ASB) or high-yield Fixed Deposits. Target 5-6% annual returns.',
             priority: 'high'
         });
     } else if (riskLevel === 'High') {
         recs.push({ 
             icon: 'fa-rocket', 
-            text: '🚀 <b>Growth Aggressive:</b> High risk appetite identified. Diversify into tech ETFs, emerging markets, and growth stocks. Target 10%+ annual returns.',
+            text: ' <b>Growth Aggressive:</b> High risk appetite identified. Diversify into tech ETFs, emerging markets, and growth stocks. Target 10%+ annual returns.',
             priority: 'high'
         });
     } else {
         recs.push({ 
-            icon: 'fa-scale-balanced', 
-            text: '⚖️ <b>Balanced Growth:</b> Maintain equilibrium. Dollar-cost average into index funds (VTSAX/VOO equivalents) for steady 7-8% returns.',
+            icon: 'fa-balance-scale', 
+            text: ' <b>Balanced Growth:</b> Maintain equilibrium. Dollar-cost average into index funds (VTSAX/VOO equivalents) for steady 7-8% returns.',
             priority: 'high'
         });
     }
@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (goals.length === 0) {
         recs.push({ 
             icon: 'fa-bullseye', 
-            text: '🎯 <b>No Goals Set:</b> Visit the Goal Planner module to define specific financial targets. AI recommendations require goal context!',
+            text: ' <b>No Goals Set:</b> Visit the Goal Planner module to define specific financial targets. AI recommendations require goal context!',
             priority: 'critical'
         });
     } else {
@@ -139,19 +139,19 @@ document.addEventListener('DOMContentLoaded', () => {
         if (overallProgress < 10) {
             recs.push({ 
                 icon: 'fa-seedling', 
-                text: `🌱 <b>Early Stage:</b> You've saved RM ${totalSaved.toLocaleString()} toward RM ${totalGoalAmount.toLocaleString()}. Set up automated monthly transfers now!`,
+                text: ` <b>Early Stage:</b> You've saved RM ${totalSaved.toLocaleString()} toward RM ${totalGoalAmount.toLocaleString()}. Set up automated monthly transfers now!`,
                 priority: 'high'
             });
         } else if (overallProgress < 50) {
             recs.push({ 
                 icon: 'fa-chart-line', 
-                text: `📈 <b>On Track:</b> You're ${overallProgress.toFixed(1)}% toward your goals. Increase monthly contributions by 10% to accelerate timeline.`,
+                text: ` <b>On Track:</b> You're ${overallProgress.toFixed(1)}% toward your goals. Increase monthly contributions by 10% to accelerate timeline.`,
                 priority: 'medium'
             });
         } else {
             recs.push({ 
                 icon: 'fa-trophy', 
-                text: `🏆 <b>Excellent Progress:</b> You've saved RM ${totalSaved.toLocaleString()} (${overallProgress.toFixed(1)}% complete)! Momentum is strong.`,
+                text: ` <b>Excellent Progress:</b> You've saved RM ${totalSaved.toLocaleString()} (${overallProgress.toFixed(1)}% complete)! Momentum is strong.`,
                 priority: 'low'
             });
         }
@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (userIncome > 0) {
         recs.push({ 
             icon: 'fa-piggy-bank', 
-            text: `🏦 <b>Emergency Fund Check:</b> Ensure you have RM ${emergencyFundTarget.toLocaleString()} (6 months income) in liquid savings before aggressive investing.`,
+            text: ` <b>Emergency Fund Check:</b> Ensure you have RM ${emergencyFundTarget.toLocaleString()} (6 months income) in liquid savings before aggressive investing.`,
             priority: 'high'
         });
     }
@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (userIncome > 50000) {
         recs.push({ 
             icon: 'fa-file-invoice-dollar', 
-            text: '💰 <b>Tax Planning:</b> With your income level, consider tax-advantaged instruments: ASB dividends, EPF contributions, and dividend-focused stocks.',
+            text: ' <b>Tax Planning:</b> With your income level, consider tax-advantaged instruments: ASB dividends, EPF contributions, and dividend-focused stocks.',
             priority: 'medium'
         });
     }
@@ -180,8 +180,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const goalDiversity = new Set(goals.map(g => g.name.substring(0, 3))).size;
         if (goalDiversity < 2) {
             recs.push({ 
-                icon: 'fa-branches', 
-                text: '🌳 <b>Diversification Tip:</b> Consider adding different goal types (retirement, education, home) to reduce concentration risk.',
+                icon: 'fa-code-branch', 
+                text: ' <b>Diversification Tip:</b> Consider adding different goal types (retirement, education, home) to reduce concentration risk.',
                 priority: 'medium'
             });
         }
