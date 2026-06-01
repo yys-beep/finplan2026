@@ -63,7 +63,22 @@
         </div>
     </div>
 
-    <div id="newsList" class="row g-4">
+    <h5 class="fw-bold text-forestgreen mb-3"><i class="fa-solid fa-chart-line me-2"></i>Live Market Trends</h5>
+        <div id="stockTickerContainer" class="row g-3 mb-5">
+            <div class="col-12 text-center text-muted small"><span class="spinner-border spinner-border-sm me-2"></span>Loading live market data...</div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold text-forestgreen mb-0"><i class="fa-regular fa-newspaper me-2"></i>Latest Headlines</h5>
+            </div>
+        
+        <div id="newsList" class="row g-4"></div>
+        
+        <div id="loadMoreContainer" class="text-center mt-5 mb-5 d-none">
+            <button id="loadMoreBtn" class="btn btn-outline-forestgreen px-5 rounded-pill fw-bold">Load More News <i class="fa-solid fa-angle-down ms-1"></i></button>
+        </div>
+
+        <div id="newsList" class="row g-4">
         </div>
 </div>
 
