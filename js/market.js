@@ -4,6 +4,17 @@
 
 
 document.addEventListener('DOMContentLoaded', () => {
+    
+    // --- AGGRESSIVE BACK-BUTTON PROTECTION ---
+    window.addEventListener('pageshow', (event) => {
+        // event.persisted is TRUE if the browser loaded the page from the "Back" button cache
+        if (event.persisted || !localStorage.getItem('finplan_session')) {
+            if (!localStorage.getItem('finplan_session')) {
+                window.location.replace('login.html');
+            }
+        }
+    });
+    
     // --- 1. THEME & LOGOUT LOGIC ---
     const themeToggle = document.getElementById('themeToggle');
     if (localStorage.getItem('finplan_theme') === 'dark') { if(themeToggle) themeToggle.checked = true; }
@@ -14,10 +25,15 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('finplan_theme', isDark ? 'dark' : 'light');
     });
 
-    document.getElementById('logoutBtn').addEventListener('click', (e) => {
+    document.getElementById('logoutBtn')?.addEventListener('click', (e) => {
         e.preventDefault();
+        
+        // 1. Clear the security tokens
         localStorage.removeItem('finplan_session');
-        window.location.href = 'login.html'; 
+        localStorage.removeItem('finplan_active_user_email'); 
+        
+        // 2. Use REPLACE instead of HREF
+        window.location.replace('login.html'); 
     });
 
     // --- 2. API CONFIGURATION ---
@@ -94,13 +110,33 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- 5. INSTANT EVENT LISTENERS ---
+    // --- 5. MONGODB PREFERENCE INTEGRATION & EVENT LISTENERS ---
+    const userEmail = localStorage.getItem('finplan_active_user_email');
+
+    // Function to save category to MongoDB when changed
+    async function saveCategoryPreference(category) {
+        if (!userEmail) {
+            console.log("No user logged in, skipping DB save.");
+            return;
+        }
+        try {
+            await fetch('/.netlify/functions/preferences', {
+                method: 'POST',
+                body: JSON.stringify({ email: userEmail, newsCategory: category })
+            });
+            console.log("Preference saved to cloud for:", userEmail);
+        } catch (err) {
+            console.error("Could not save preference", err);
+        }
+    }
     
-    // Dropdown change: IMMEDIATE fetch
+    // Dropdown change: IMMEDIATE fetch AND save to DB
     if (categorySelect) {
         categorySelect.addEventListener('change', (e) => {
+            const newCategory = e.target.value;
             searchInput.value = ''; // Clear custom search text
-            fetchNews(e.target.value); // Instantly load the new category
+            fetchNews(newCategory); // Instantly load the new category
+            saveCategoryPreference(newCategory); // Save to MongoDB
         });
     }
 
@@ -116,8 +152,30 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- 6. INITIAL LOAD ---
-    // Instantly loads news before the user even clicks anything!
-    const defaultSubject = categorySelect ? categorySelect.value : 'finance';
-    fetchNews(defaultSubject);
+    // --- 6. INITIAL LOAD (WITH MONGODB) ---
+    async function initMarketInsights() {
+        let startingCategory = 'finance'; // Fallback default
+
+        if (userEmail) {
+            try {
+                // Ask MongoDB for the user's saved preference
+                const res = await fetch(`/.netlify/functions/preferences?email=${userEmail}`);
+                if (res.ok) {
+                    const prefData = await res.json();
+                    startingCategory = prefData.newsCategory || 'finance';
+                    
+                    // Update the dropdown UI to match the database
+                    if (categorySelect) categorySelect.value = startingCategory;
+                }
+            } catch (err) {
+                console.error("Failed to load preferences", err);
+            }
+        }
+        
+        // Fetch news using the database preference
+        fetchNews(startingCategory);
+    }
+
+    // Start the engine!
+    initMarketInsights();
 });

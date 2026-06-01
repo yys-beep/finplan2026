@@ -361,3 +361,47 @@ html.dark-mode body, html.dark-mode .bg-light {
     color: #FFFFFF !important;
     opacity: 1 !important;
 }
+
+/* ==========================================================================
+   6. RECOMMENDATIONS PAGE DARK MODE FIXES
+   ========================================================================== */
+/* Force the AI box and recommendation cards to use the dark card background */
+.dark-mode .recommendation-card.bg-white,
+.dark-mode #aiHolisticInsight {
+    background-color: var(--bg-card) !important;
+    background-image: none !important; /* Removes the light mode gradient */
+    border-color: var(--border-color) !important;
+}
+
+/* Brighten the dark green icons and text so they pop against the dark background */
+.dark-mode .text-forestgreen {
+    color: var(--primary-light) !important;
+}
+
+/* ==========================================================================
+   7. SECURITY PAGE & COMPONENT DARK MODE FIXES
+   ========================================================================== */
+/* Fix invisible disabled buttons (like the Update Password button) */
+.dark-mode .btn:disabled, 
+.dark-mode button:disabled {
+    background-color: #2a2a2a !important;
+    color: #888888 !important;
+    border: 1px solid #444444 !important;
+    opacity: 1 !important;
+}
+
+/* Fix Bootstrap Alert/Info boxes (like the 2FA warning box) */
+.dark-mode .alert,
+.dark-mode .alert-info,
+.dark-mode .alert-success,
+.dark-mode .alert-warning,
+.dark-mode .bg-light.text-dark {
+    background-color: #16221c !important; /* Deep subtle green */
+    border: 1px solid var(--primary-light) !important;
+    color: #ffffff !important; /* Force text to white */
+}
+
+/* Ensure icons inside those alerts stay bright */
+.dark-mode .alert i {
+    color: var(--primary-light) !important;
+}
