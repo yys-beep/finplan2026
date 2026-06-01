@@ -4,16 +4,6 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-    
-    // --- AGGRESSIVE BACK-BUTTON PROTECTION ---
-    window.addEventListener('pageshow', (event) => {
-        // event.persisted is TRUE if the browser loaded the page from the "Back" button cache
-        if (event.persisted || !localStorage.getItem('finplan_session')) {
-            if (!localStorage.getItem('finplan_session')) {
-                window.location.replace('login.html');
-            }
-        }
-    });
 
     // ==========================================
     // 1. DEVELOPER CHEAT SHEET (Console Log)
