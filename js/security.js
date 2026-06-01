@@ -3,6 +3,26 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+    
+    // --- AGGRESSIVE BACK-BUTTON PROTECTION ---
+    window.addEventListener('pageshow', (event) => {
+        // event.persisted is TRUE if the browser loaded the page from the "Back" button cache
+        if (event.persisted || !localStorage.getItem('finplan_session')) {
+            if (!localStorage.getItem('finplan_session')) {
+                window.location.replace('login.html');
+            }
+        }
+    });
+    
+    // --- 0. GLOBAL SESSION DATA ---
+    const sessionEmail = localStorage.getItem('finplan_active_user_email');
+    if (!sessionEmail) {
+        window.location.href = 'login.html';
+        return;
+    }
+    const userKey = `user_${sessionEmail}`;
+    const userData = JSON.parse(localStorage.getItem(userKey)) || {};
+
     // --- 1. THEME & LOGOUT LOGIC ---
     const themeToggle = document.getElementById('themeToggle');
     if (localStorage.getItem('finplan_theme') === 'dark') { if(themeToggle) themeToggle.checked = true; }
@@ -13,11 +33,23 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('finplan_theme', isDark ? 'dark' : 'light');
     });
 
-    document.getElementById('logoutBtn').addEventListener('click', (e) => {
+    document.getElementById('logoutBtn')?.addEventListener('click', (e) => {
         e.preventDefault();
+        
+        // 1. Clear the security tokens
         localStorage.removeItem('finplan_session');
-        window.location.href = 'login.html'; 
+        localStorage.removeItem('finplan_active_user_email'); 
+        
+        // 2. Use REPLACE instead of HREF
+        window.location.replace('login.html'); 
     });
+
+    // --- INITIALIZE 2FA UI STATE ---
+    const toggle2FA = document.getElementById('toggle2FA');
+    if (toggle2FA) {
+        // Set the toggle switch to match what is saved in MongoDB
+        toggle2FA.checked = userData.twoFactorEnabled !== false; 
+    }
 
     // --- 2. PASSWORD VISIBILITY TOGGLE (Eye Icon) ---
     document.querySelectorAll('.toggle-password').forEach(icon => {
@@ -28,13 +60,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (input.type === 'password') {
                 input.type = 'text';
                 this.classList.remove('fa-eye');
-                this.classList.add('fa-eye-slash'); // Switch to slashed eye
-                this.style.color = '#2D6A4F'; // Turn green when visible
+                this.classList.add('fa-eye-slash');
+                this.style.color = '#2D6A4F'; 
             } else {
                 input.type = 'password';
                 this.classList.remove('fa-eye-slash');
-                this.classList.add('fa-eye'); // Switch back to normal eye
-                this.style.color = '#6c757d'; // Back to grey
+                this.classList.add('fa-eye'); 
+                this.style.color = '#6c757d'; 
             }
         });
     });
@@ -108,51 +140,87 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- 5. ACTUAL FORM SUBMISSION & DATA SAVING ---
-    document.getElementById('passwordForm').addEventListener('submit', (e) => {
+    // --- 5. SECURE FORM SUBMISSION (MongoDB) ---
+    document.getElementById('passwordForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         
         const currentPassInput = document.getElementById('currentPassword').value;
         const newPassInput = document.getElementById('newPassword').value;
 
-        // Fetch the logged-in user's data from localStorage
-        const sessionEmail = localStorage.getItem('finplan_active_user_email');
-        const userKey = `user_${sessionEmail}`;
-        const userData = JSON.parse(localStorage.getItem(userKey));
-
-        // Security Check: Verify old password
-        if (userData.password !== currentPassInput) {
-            alert("Error: The Current Password you entered is incorrect!");
-            return; // Stop the update process
-        }
-        
-        // Security Check Passed: Save the new password
-        userData.password = newPassInput;
-        localStorage.setItem(userKey, JSON.stringify(userData));
-
-        alert('Success! Your password has been updated securely.');
-        e.target.reset();
-        
-        // Reset the meter UI
-        strengthBar.style.width = '0%';
-        strengthText.textContent = 'Enter a new password';
-        strengthText.className = 'small text-muted mt-1 mb-0';
+        // Set loading state on the button
+        const originalBtnText = saveBtn.innerHTML;
+        saveBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Securing...';
         saveBtn.disabled = true;
 
-        // Force icons back to hidden state
-        document.querySelectorAll('.toggle-password').forEach(icon => {
-            icon.classList.remove('fa-eye-slash');
-            icon.classList.add('fa-eye');
-            icon.style.color = '#6c757d';
-        });
+        try {
+            const response = await fetch('/.netlify/functions/auth-api', {
+                method: 'POST',
+                body: JSON.stringify({
+                    action: 'change-password',
+                    email: sessionEmail,
+                    currentPassword: currentPassInput,
+                    newPassword: newPassInput
+                })
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                alert('Success! Your password has been updated securely in the cloud.');
+                e.target.reset();
+                
+                // Reset the meter UI
+                strengthBar.style.width = '0%';
+                strengthText.textContent = 'Enter a new password';
+                strengthText.className = 'small text-muted mt-1 mb-0';
+                
+                // Force icons back to hidden state
+                document.querySelectorAll('.toggle-password').forEach(icon => {
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                    icon.style.color = '#6c757d';
+                });
+            } else {
+                alert(`Error: ${result.error}`);
+            }
+        } catch (err) {
+            alert('Network error. Could not connect to the security server.');
+        } finally {
+            saveBtn.innerHTML = originalBtnText;
+            saveBtn.disabled = true; 
+        }
     });
 
-    // --- 6. 2FA TOGGLE DEMO ---
-    document.getElementById('toggle2FA').addEventListener('change', (e) => {
-        if (!e.target.checked) {
-            alert('Warning: Disabling 2FA will reduce your account security.');
-        } else {
-            alert('2FA via Email OTP is now enabled.');
+    // --- 6. REAL 2FA TOGGLE (MongoDB) ---
+    toggle2FA?.addEventListener('change', async (e) => {
+        const isEnabled = e.target.checked;
+        
+        try {
+            const response = await fetch('/.netlify/functions/auth-api', {
+                method: 'POST',
+                body: JSON.stringify({
+                    action: 'update-2fa',
+                    email: sessionEmail,
+                    isEnabled: isEnabled
+                })
+            });
+            
+            const result = await response.json();
+            
+            if (response.ok) {
+                // Update local storage so the toggle stays correct on refresh
+                localStorage.setItem(`user_${sessionEmail}`, JSON.stringify(result.user));
+                
+                if (isEnabled) {
+                    alert('2FA via Email OTP is now enabled and secured.');
+                } else {
+                    alert('Warning: 2FA is now disabled. You will no longer receive email codes.');
+                }
+            }
+        } catch (err) {
+            alert('Network error. Could not update 2FA settings.');
+            // Revert the toggle visually if it failed
+            e.target.checked = !isEnabled; 
         }
     });
 });

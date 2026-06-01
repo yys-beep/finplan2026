@@ -48,20 +48,29 @@
             <h6 class="text-uppercase fw-bold small mb-3 section-label">Step 1: Define Your Goal</h6>
             <form id="goalForm">
                 <div class="row g-3">
-                    <div class="col-md-4">
-                        <label class="form-label small fw-bold field-label">Goal Title</label>
-                        <input type="text" class="form-control" id="goalName" placeholder="e.g. New Laptop" required>
+                    <div class="col-12 col-lg-4">
+                        <div class="form-floating">
+                            <input type="text" class="form-control shadow-sm" id="goalName" placeholder="e.g. New Laptop" required>
+                            <label for="goalName" class="text-muted">Goal Title (e.g. New Laptop)</label>
+                        </div>
                     </div>
-                    <div class="col-md-3">
-                        <label class="form-label small fw-bold field-label">Target Amount (RM)</label>
-                        <input type="number" class="form-control" id="goalAmount" required>
+                    
+                    <div class="col-12 col-md-6 col-lg-3">
+                        <div class="form-floating">
+                            <input type="number" class="form-control shadow-sm" id="goalAmount" placeholder="Target Amount" required>
+                            <label for="goalAmount" class="text-muted">Target Amount (RM)</label>
+                        </div>
                     </div>
-                    <div class="col-md-3">
-                        <label class="form-label small fw-bold field-label">Target Date</label>
-                        <input type="date" class="form-control" id="goalDate" required>
+                    
+                    <div class="col-12 col-md-6 col-lg-3">
+                        <div class="form-floating">
+                            <input type="date" class="form-control shadow-sm" id="goalDate" required>
+                            <label for="goalDate" class="text-muted">Target Date</label>
+                        </div>
                     </div>
-                    <div class="col-md-2 d-flex align-items-end">
-                        <button type="submit" class="btn btn-forestgreen w-100 py-2">Add Goal</button>
+                    
+                    <div class="col-12 col-lg-2 d-flex align-items-center mt-3 mt-lg-0">
+                        <button type="submit" class="btn btn-forestgreen w-100 h-100 py-3 shadow-sm fw-bold rounded-3">Add Goal</button>
                     </div>
                 </div>
             </form>

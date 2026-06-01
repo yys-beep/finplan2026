@@ -1,10 +1,11 @@
 /**
  * FinPlan Service Worker (PWA) - Module 6
- * Enhanced caching strategy with offline support and network-first for APIs
+ * Enhanced caching strategy with offline support and real-time development sync
  */
 
-const CACHE_NAME = 'finplan-cache-v2';
-const RUNTIME_CACHE = 'finplan-runtime-v1';
+// BUMPED TO V5 to force browsers to replace the old cache rules instantly
+const CACHE_NAME = 'finplan-cache-v5';
+const RUNTIME_CACHE = 'finplan-runtime-v5';
 
 // Core files to cache on install (app shell)
 const urlsToCache = [
@@ -40,7 +41,7 @@ self.addEventListener('install', event => {
         console.log('Caching app shell');
         return cache.addAll(urlsToCache);
       })
-      .then(() => self.skipWaiting()) // Skip waiting, activate immediately
+      .then(() => self.skipWaiting()) // Activates immediately
   );
 });
 
@@ -57,7 +58,7 @@ self.addEventListener('activate', event => {
           }
         })
       );
-    }).then(() => self.clients.claim())
+    }).then(() => self.clients.claim()) // Takes control of pages immediately
   );
 });
 
@@ -66,7 +67,12 @@ self.addEventListener('fetch', event => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // ===== STRATEGY 1: Network-First for API calls =====
+  // ===== RULE 0: NEVER CACHE MONGODB CLOUD APIS =====
+  if (url.pathname.includes('/.netlify/functions/')) {
+    return; // Bypasses service worker completely
+  }
+
+  // ===== STRATEGY 1: Network-First for External APIs =====
   if (url.pathname.startsWith('/news') || url.hostname.includes('newsapi')) {
     event.respondWith(
       fetch(request)
@@ -74,7 +80,6 @@ self.addEventListener('fetch', event => {
           if (!response || response.status !== 200) {
             throw new Error('API request failed');
           }
-          // Cache successful API responses
           const responseClone = response.clone();
           caches.open(RUNTIME_CACHE).then(cache => {
             cache.put(request, responseClone);
@@ -82,7 +87,6 @@ self.addEventListener('fetch', event => {
           return response;
         })
         .catch(() => {
-          // Return cached API response if network fails
           return caches.match(request)
             .then(cached => cached || new Response(
               JSON.stringify({ error: 'Offline - no cached data' }), 
@@ -91,10 +95,27 @@ self.addEventListener('fetch', event => {
         })
     );
   }
-  // ===== STRATEGY 2: Cache-First for static assets =====
+  
+  // ===== STRATEGY 2A: NEW! Network-First for Code & Styling (.js, .css) =====
+  // This lets any standard refresh load your updated code files instantly!
+  else if (request.method === 'GET' && (url.pathname.endsWith('.css') || url.pathname.endsWith('.js'))) {
+    event.respondWith(
+      fetch(request)
+        .then(response => {
+          if (response.status === 200) {
+            const responseClone = response.clone();
+            caches.open(RUNTIME_CACHE).then(cache => {
+              cache.put(request, responseClone);
+            });
+          }
+          return response;
+        })
+        .catch(() => caches.match(request)) // Fallback to cache if offline
+    );
+  }
+
+  // ===== STRATEGY 2B: Cache-First for static Images (.png, .jpg, .svg) =====
   else if (request.method === 'GET' && (
-    url.pathname.endsWith('.css') || 
-    url.pathname.endsWith('.js') || 
     url.pathname.endsWith('.png') || 
     url.pathname.endsWith('.jpg') ||
     url.pathname.endsWith('.svg')
@@ -112,7 +133,8 @@ self.addEventListener('fetch', event => {
         )
     );
   }
-  // ===== STRATEGY 3: Cache with network fallback for HTML pages =====
+  
+  // ===== STRATEGY 3: Network-First for HTML pages =====
   else if (request.method === 'GET' && url.pathname.endsWith('.html')) {
     event.respondWith(
       fetch(request)
@@ -126,6 +148,7 @@ self.addEventListener('fetch', event => {
         .catch(() => caches.match(request))
     );
   }
+  
   // ===== DEFAULT: Cache-first, then network =====
   else {
     event.respondWith(

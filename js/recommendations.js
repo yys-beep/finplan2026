@@ -4,6 +4,17 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+    
+    // --- AGGRESSIVE BACK-BUTTON PROTECTION ---
+    window.addEventListener('pageshow', (event) => {
+        // event.persisted is TRUE if the browser loaded the page from the "Back" button cache
+        if (event.persisted || !localStorage.getItem('finplan_session')) {
+            if (!localStorage.getItem('finplan_session')) {
+                window.location.replace('login.html');
+            }
+        }
+    });
+
     // --- 1. THEME & LOGOUT LOGIC ---
     const themeToggle = document.getElementById('themeToggle');
     const isDark = localStorage.getItem('finplan_theme') === 'dark';
@@ -16,10 +27,15 @@ document.addEventListener('DOMContentLoaded', () => {
         location.reload();
     });
 
-    document.getElementById('logoutBtn').addEventListener('click', (e) => {
+    document.getElementById('logoutBtn')?.addEventListener('click', (e) => {
         e.preventDefault();
+        
+        // 1. Clear the security tokens
         localStorage.removeItem('finplan_session');
-        window.location.href = 'login.html'; 
+        localStorage.removeItem('finplan_active_user_email'); 
+        
+        // 2. Use REPLACE instead of HREF
+        window.location.replace('login.html'); 
     });
 
     // --- 2. DATA RETRIEVAL ---
@@ -187,16 +203,30 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // ===== RENDER RECOMMENDATIONS =====
+    // ===== RENDER HARDCODED RECOMMENDATIONS =====
     recs.sort((a, b) => {
         const priorityOrder = { critical: 0, high: 1, medium: 2, low: 3 };
         return priorityOrder[a.priority] - priorityOrder[b.priority];
     });
 
+    // 1. Inject the Real AI Strategy Box at the top (matches screenshot exactly)
+    recsList.innerHTML = `
+        <div id="aiHolisticInsight" class="p-4 border rounded-3 mb-4 shadow-sm" style="background-color: #f1f8f4;">
+            <div class="d-flex align-items-center mb-2">
+                <i class="fa-solid fa-brain text-forestgreen fa-lg me-2"></i>
+                <h6 class="fw-bold text-forestgreen mb-0">Gemini Holistic Strategy</h6>
+            </div>
+            <p id="aiHolisticText" class="small mb-0 mt-2" style="color: var(--text-color);">
+                <span class="spinner-border spinner-border-sm me-2 text-forestgreen"></span> Analyzing your portfolio...
+            </p>
+        </div>
+    `;
+
+    // 2. Append the Hardcoded Expert Rules below it (clean white cards, centered icons)
     recs.forEach(rec => {
         recsList.insertAdjacentHTML('beforeend', `
-        <div class="p-3 border rounded-3 d-flex align-items-start recommendation-card" style="background-color: var(--bg-card); border-left: 4px solid var(--primary);">
-            <div class="bg-mintgreen text-primary rounded-circle p-2 me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 45px; height: 45px; min-width: 45px;">
+        <div class="p-4 border rounded-3 d-flex align-items-center recommendation-card mb-3 shadow-sm bg-white">
+            <div class="bg-mintgreen text-forestgreen rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 me-4" style="width: 48px; height: 48px;">
                 <i class="fa-solid ${rec.icon} fa-lg"></i>
             </div>
             <div style="color: var(--text-color);">
@@ -205,4 +235,32 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>`);
     });
 
+    // ===== FETCH REAL HOLISTIC AI =====
+    async function fetchHolisticAI() {
+        const aiTextEl = document.getElementById('aiHolisticText');
+        try {
+            const response = await fetch('/.netlify/functions/ai-portfolio', {
+                method: 'POST',
+                body: JSON.stringify({
+                    income: userIncome,
+                    riskLevel: riskLevel,
+                    goals: goals
+                })
+            });
+            
+            const result = await response.json();
+            
+            if (response.ok) {
+                // Update the placeholder with the AI's response
+                aiTextEl.innerHTML = result.advice;
+            } else {
+                aiTextEl.innerHTML = "<span class='text-danger'>AI Analysis temporarily unavailable. Please rely on the expert rules below.</span>";
+            }
+        } catch (error) {
+            aiTextEl.innerHTML = "<span class='text-danger'>Network error connecting to AI core.</span>";
+        }
+    }
+
+    // Trigger the AI fetch in the background
+    fetchHolisticAI();
 });
