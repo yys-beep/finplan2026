@@ -80,7 +80,10 @@ async function initDashboardCharts() {
     const goals = JSON.parse(localStorage.getItem(`goals_${email}`)) || [];
 
     // --- 5. UPDATE DASHBOARD STATS ---
-    document.getElementById('navGreeting').textContent = `Hello, ${userData.name || 'User'}!`;
+    const welcomeEl = document.getElementById('welcomeHeading');
+    if (welcomeEl) {
+        welcomeEl.textContent = `Welcome back, ${userData.name || 'User'}!`;
+    }
     document.getElementById('statIncome').textContent = `RM ${(parseFloat(userData.income) || 0).toLocaleString('en-MY', { minimumFractionDigits: 2 })}`;
     document.getElementById('statRisk').textContent = userData.risk || '---';
     document.getElementById('statJob').textContent = userData.employment || '---';
