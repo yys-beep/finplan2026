@@ -111,10 +111,9 @@ finplan2026/
 4.  **Running Locally:**
     ```bash
         npm start
-        ```
         Then open your browser and navigate to: `http://localhost:3000`
-    
-    ---
+
+---
 
 ## 🌐 Deployment
 
