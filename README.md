@@ -81,70 +81,94 @@ finplan2026/
 ├── netlify/            # Netlify functions
 └── .vscode/            # VS Code settings
 
-🚀 Getting Started
-Prerequisites
-Node.js (v14 or higher)
-npm or yarn
-Modern web browser (Chrome, Firefox, Safari, Edge)
-Installation
+```
 
-Clone the repository:
+## 🚀 Getting Started
 
-git clone https://github.com/yys-beep/finplan2026.git
-cd finplan2026
+### Prerequisites
+*   Node.js (v14 or higher)
+*   npm or yarn
+*   Modern web browser (Chrome, Firefox, Safari, Edge)
 
-Install dependencies:
+### Installation
 
-npm install
-Environment Setup
+1.  **Clone the repository:**
+```bash
+    git clone [https://github.com/yys-beep/finplan2026.git](https://github.com/yys-beep/finplan2026.git)
+    cd finplan2026
+    ```
 
-Create a .env file and configure:
+2.  **Install dependencies:**
+```bash
+    npm install
+    ```
 
-MongoDB connection string
-NewsAPI key
-Alpha Vantage API key
-Email service credentials
-Running Locally
-npm start
+3.  **Environment Setup:**
+    Create a `.env` file in the root directory and configure the following:
+    *   MongoDB connection string
+    *   NewsAPI key
+    *   Alpha Vantage API key
+    *   Email service credentials
 
-Then open:
+4.  **Running Locally:**
+```bash
+    npm start
+    ```
+    Then open your browser and navigate to: `http://localhost:3000`
 
-http://localhost:3000
-🌐 Deployment
+---
 
-This project is configured for Netlify deployment.
-Simply push to the main branch and Netlify will automatically build and deploy.
+## 🌐 Deployment
 
-📋 Pages Overview
-Page	Purpose
-index.html	Loading screen with session check
-login.html	User authentication & registration
-dashboard.html	Main hub - financial overview
-calculator.html	Expense and ROI calculator
-goals.html	Financial goals tracker
-market.html	Market data and trends
-recommendations.html	Investment advice engine
-profile.html	User profile management
-security.html	Security settings
-🔒 Security Features
-Session Management (token-based authentication)
-Data Encryption & secure password hashing
-Two-Factor Authentication (2FA)
-HTTPS API communication
-User-controlled data deletion
-💾 Data Management
-Local Storage: Fast session and UI state handling
-MongoDB: Persistent backend storage
-Service Worker: Offline caching and performance optimization
-📱 Progressive Web App (PWA)
+This project is configured for **Netlify** deployment. 
+Simply push your changes to the `main` branch, and Netlify will automatically build and deploy the application.
 
-FinPlan can be installed like a native app:
+---
 
-iOS: Safari → Share → Add to Home Screen
-Android: Chrome → Install App
-Desktop: Browser menu → Install
-Benefits
-Offline access
-Fast loading with caching
-Native app-like experience
-No app store required
+## 📋 Pages Overview
+
+| Page | Purpose |
+| :--- | :--- |
+| `index.html` | Loading screen with session check |
+| `login.html` | User authentication & registration |
+| `dashboard.html` | Main hub - financial overview |
+| `calculator.html` | Expense and ROI calculator |
+| `goals.html` | Financial goals tracker |
+| `market.html` | Market data and trends |
+| `recommendations.html` | Investment advice engine |
+| `profile.html` | User profile management |
+| `security.html` | Security settings |
+
+---
+
+## 🔒 Security Features
+
+*   **Session Management:** Secure token-based authentication.
+*   **Data Encryption:** Secure password hashing to protect user credentials.
+*   **Two-Factor Authentication (2FA):** Added layer of account security.
+*   **HTTPS:** Secure API communication.
+*   **User-Controlled Data:** Options for users to securely delete their data.
+
+---
+
+## 💾 Data Management
+
+*   **Local Storage:** Fast session handling and UI state management.
+*   **MongoDB:** Persistent backend storage for user data.
+*   **Service Worker:** Offline caching and performance optimization.
+
+---
+
+## 📱 Progressive Web App (PWA)
+
+FinPlan can be installed directly onto your device, behaving just like a native app:
+
+*   **iOS:** Safari → Share icon → Add to Home Screen
+*   **Android:** Chrome menu → Install App
+*   **Desktop:** Browser menu → Install FinPlan
+
+### Benefits:
+*   Offline access to your financial data.
+*   Fast loading times utilizing local caching.
+*   Native app-like experience (runs in its own window).
+*   No app store installation required.
