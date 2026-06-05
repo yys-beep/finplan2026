@@ -93,15 +93,13 @@ finplan2026/
 ### Installation
 
 1.  **Clone the repository:**
-```bash
-    git clone [https://github.com/yys-beep/finplan2026.git](https://github.com/yys-beep/finplan2026.git)
+    ```bash
+    git clone https://github.com/yys-beep/finplan2026.git
     cd finplan2026
-    ```
 
 2.  **Install dependencies:**
-```bash
-    npm install
-    ```
+    ```bash
+        npm install
 
 3.  **Environment Setup:**
     Create a `.env` file in the root directory and configure the following:
@@ -111,12 +109,12 @@ finplan2026/
     *   Email service credentials
 
 4.  **Running Locally:**
-```bash
-    npm start
-    ```
-    Then open your browser and navigate to: `http://localhost:3000`
-
----
+    ```bash
+        npm start
+        ```
+        Then open your browser and navigate to: `http://localhost:3000`
+    
+    ---
 
 ## 🌐 Deployment
 
