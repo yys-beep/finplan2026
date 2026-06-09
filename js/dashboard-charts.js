@@ -3,6 +3,13 @@
  * Securely synced with MongoDB Cloud
  */
 
+// unit testing UT-10
+// --- Logic Section (Safe for Node.js) ---
+function generateChartData(data) {
+    // Your logic to process data for the chart
+    return data.map(item => item.amount);
+}
+
 function ensureChartThenInit(initFn) {
     if (typeof Chart !== 'undefined') return initFn();
     const src = 'https://cdn.jsdelivr.net/npm/chart.js';
@@ -226,6 +233,7 @@ async function initDashboardCharts() {
     }
 }
 
+if (typeof document !== 'undefined') {
 document.addEventListener('DOMContentLoaded', () => {
 
   // --- AGGRESSIVE BACK-BUTTON PROTECTION ---
@@ -240,3 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     ensureChartThenInit(initDashboardCharts);
 });
+}
+
+// unit testing UT-10
+module.exports = { generateChartData };

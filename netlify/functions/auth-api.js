@@ -1,6 +1,7 @@
 const { connectDB } = require('./utils/db');
 const User = require('./models/User');
 const nodemailer = require('nodemailer');
+const bcrypt = require('bcrypt');
 
 exports.handler = async function(event, context) {
     // 1. Check method first
@@ -25,8 +26,13 @@ exports.handler = async function(event, context) {
 
         // --- LOGIN LOGIC (Generates and Sends Email OTP) ---
         if (action === 'login') {
-            const user = await User.findOne({ email, password });
+            // 1. ONLY search by email first
+            const user = await User.findOne({ email });
             if (!user) return { statusCode: 401, body: JSON.stringify({ error: 'Invalid email or password.' }) };
+            
+            // 2. Use bcrypt to mathematically compare the typed password with the hashed database password
+            const isMatch = await bcrypt.compare(password, user.password);
+            if (!isMatch) return { statusCode: 401, body: JSON.stringify({ error: 'Invalid email or password.' }) };
             
             // Check if user turned off 2FA
             if (user.twoFactorEnabled === false) {
@@ -179,12 +185,14 @@ exports.handler = async function(event, context) {
                 return { statusCode: 404, body: JSON.stringify({ error: 'User not found.' }) };
             }
 
-            if (user.password !== currentPassword) {
+            // Compare typed current password with the hashed database password
+            const isMatch = await bcrypt.compare(currentPassword, user.password);
+            if (!isMatch) {
                 return { statusCode: 401, body: JSON.stringify({ error: 'Incorrect current password.' }) };
             }
 
             user.password = newPassword;
-            await user.save();
+            await user.save(); // The pre-save hook we made earlier will automatically hash this!
 
             return { statusCode: 200, body: JSON.stringify({ message: 'Password updated successfully!' }) };
         }

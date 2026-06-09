@@ -3,6 +3,13 @@
  * Handles Registration, Login, OTP, and Password Reset
  */
 
+// --- Logic Section (Safe for Node.js) ---
+const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+const validatePassword = (p) => p.length >= 8;
+
+// --- Event Listener Section (Only runs in Browser) ---
+// Wrap this in a check so it doesn't run during testing
+if (typeof document !== 'undefined') {
 document.addEventListener('DOMContentLoaded', () => {
 
     // ==========================================
@@ -523,3 +530,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+}
+
+// unit testing UT-01, UT-02
+module.exports = { validateEmail, validatePassword };

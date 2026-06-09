@@ -3,6 +3,14 @@
  * AI-Powered Portfolio Recommendations with Dynamic Data Visualization
  */
 
+// unit testing UT-09
+// --- Logic Section (Safe for Node.js) ---
+function analyzeRiskProfile(risk) {
+    if (risk === "Low") return "Recommended: Bonds and Fixed Deposits";
+    return "Recommended: Diversified Stocks";
+}
+
+if (typeof document !== 'undefined') {
 document.addEventListener('DOMContentLoaded', () => {
     
     // --- AGGRESSIVE BACK-BUTTON PROTECTION ---
@@ -263,4 +271,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Trigger the AI fetch in the background
     fetchHolisticAI();
+
+    const element = document.getElementById('recommendation-result');
+        if (element) element.innerHTML = analyzeRiskProfile("Low");
 });
+}
+
+// For unit testing UT-09
+module.exports = { analyzeRiskProfile };

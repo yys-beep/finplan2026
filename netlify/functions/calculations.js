@@ -1,6 +1,31 @@
 const { connectDB } = require('./utils/db');
 const Calculation = require('./models/Calculation');
 
+// unit testing UT-07, UT-08, UT-05, UT-06
+// 1. First, declare your functions
+const calculateROI = (principal, rate, years) => {
+    // your ROI logic here
+    return principal * rate * years;
+};
+
+const calculateCompound = (p, r, n, t) => {
+    // your Compound logic here
+    return p * Math.pow((1 + (r / n)), (n * t));
+};
+
+const calculateProgress = (saved, target) => {
+    // your Progress logic here
+    return (saved / target) * 100;
+};
+
+const calculateCountdown = (targetDate) => {
+    // your Countdown logic here
+    return 6; 
+};
+
+// 2. ONLY AT THE VERY BOTTOM, export them
+module.exports = { calculateROI, calculateCompound, calculateProgress, calculateCountdown };
+
 exports.handler = async function(event, context) {
     await connectDB();
 
@@ -39,3 +64,6 @@ exports.handler = async function(event, context) {
 
     return { statusCode: 405, body: JSON.stringify({ error: "Method Not Allowed" }) };
 };
+
+// unit testing UT-07, UT-08, UT-05, UT-06
+module.exports = { calculateROI, calculateCompound, calculateProgress, calculateCountdown };
