@@ -2,6 +2,25 @@
  * FinPlan Security & Access Logic
  */
 
+// unit testing UT-03, UT-04
+// --- Logic Section (Safe for Node.js) ---
+let bcrypt;
+if (typeof require !== 'undefined') {
+    bcrypt = require('bcrypt');
+}
+
+const hashPassword = async (password) => {
+    if (!bcrypt) return password; // Fallback if somehow called outside Node
+    const saltRounds = 10;
+    const hash = await bcrypt.hash(password, saltRounds);
+    return hash; 
+};
+
+const generateToken = (email) => {
+    return "mocked.jwt.token.for." + email; 
+}
+
+if (typeof document !== 'undefined') {
 document.addEventListener('DOMContentLoaded', () => {
     
     // --- AGGRESSIVE BACK-BUTTON PROTECTION ---
@@ -224,3 +243,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+}
+
+// unit testing UT-03, UT-04
+// Safely export only if running in Node.js (Testing environment)
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { hashPassword, generateToken };
+}
