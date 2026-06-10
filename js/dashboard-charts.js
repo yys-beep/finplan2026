@@ -251,4 +251,7 @@ document.addEventListener('DOMContentLoaded', () => {
 }
 
 // unit testing UT-10
-module.exports = { generateChartData };
+// This prevents the browser from crashing while still allowing Unit Tests to run
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { generateChartData };
+}

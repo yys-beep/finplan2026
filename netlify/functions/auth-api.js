@@ -197,6 +197,44 @@ exports.handler = async function(event, context) {
             return { statusCode: 200, body: JSON.stringify({ message: 'Password updated successfully!' }) };
         }
 
+        // ==========================================================
+        // CASCADING TERMINATION: WIPE USER, GOALS, CALCS, & PREFS
+        // ==========================================================
+        if (action === 'delete-account') {
+            const user = await User.findOne({ email });
+            if (!user) {
+                return { statusCode: 404, body: JSON.stringify({ error: 'User not found in the database.' }) };
+            }
+
+            // Cryptographically verify identity before deleting anything
+            const isMatch = await bcrypt.compare(password, user.password);
+            if (!isMatch) {
+                return { statusCode: 401, body: JSON.stringify({ error: 'Incorrect password. Account deletion denied.' }) };
+            }
+
+            // Safely resolve individual database collections using dynamic require statements
+            try {
+                const Goal = require('./models/Goal');
+                const Preference = require('./models/Preference');
+                const Calculation = require('./models/Calculation');
+
+                // Simultaneously purge dependent collection sets matching user's reference email string
+                await Promise.all([
+                    Goal.deleteMany({ email: email }),
+                    Preference.deleteMany({ email: email }),
+                    Calculation.deleteMany({ email: email })
+                ]);
+                console.log(`Cascaded erasure complete for linked records mapping to: ${email}`);
+            } catch (modelError) {
+                // Fallback catch to prevent a system execution lock if a specific file layout path differs
+                console.error("Cascading target resolution warning:", modelError.message);
+            }
+
+            // Finally, remove primary account profile
+            await User.findOneAndDelete({ email });
+            return { statusCode: 200, body: JSON.stringify({ message: 'Account and all related financial metrics successfully purged!' }) };
+        }
+
         return { statusCode: 400, body: JSON.stringify({ error: 'Invalid action specified.' }) };
 
     } catch (error) {

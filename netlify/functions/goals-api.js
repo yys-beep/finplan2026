@@ -6,6 +6,7 @@ exports.handler = async function(event, context) {
     const method = event.httpMethod;
 
     try {
+        
         // GET: Fetch all goals for a user
         if (method === 'GET') {
             const email = event.queryStringParameters.email;

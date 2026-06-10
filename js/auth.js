@@ -529,9 +529,80 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // ==========================================
+    // 8. SECURITY EXPANSION: DELETE ACCOUNT (BULLETPROOF FIX)
+    // ==========================================
+    document.addEventListener('click', async (e) => {
+        // .closest() ensures the click works even if they click the text inside the button
+        const deleteBtn = e.target.closest('#deleteAccount');
+        
+        if (deleteBtn) {
+            e.preventDefault();
+            console.log("Delete button successfully clicked!");
+            
+            // Step 1: Initial Warning Confirmation
+            const confirmDelete = confirm("WARNING: Are you sure you want to permanently delete your account? All your financial data will be wiped. This cannot be undone.");
+            if (!confirmDelete) return;
+
+            // Step 2: Request Password Verification
+            const confirmationPassword = prompt("SECURITY CHECK: Please re-enter your account password to authorize deletion:");
+            if (confirmationPassword === null) return; // User clicked cancel
+            
+            if (confirmationPassword.trim() === "") {
+                alert("Password validation required. Deletion aborted.");
+                return;
+            }
+
+            const activeEmail = localStorage.getItem('finplan_active_user_email');
+            if (!activeEmail) {
+                alert("Session expired. Please log in again.");
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const originalText = deleteBtn.innerHTML;
+            deleteBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Verifying...';
+            deleteBtn.disabled = true;
+
+            try {
+                const response = await fetch('/.netlify/functions/auth-api', {
+                    method: 'POST',
+                    body: JSON.stringify({ 
+                        action: 'delete-account', 
+                        email: activeEmail,
+                        password: confirmationPassword // Forward input to backend bcrypt validator
+                    })
+                });
+                
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert("Your account and all associated data have been permanently deleted.");
+                    
+                    // Secure Session Purge
+                    localStorage.removeItem('finplan_session');
+                    localStorage.removeItem('finplan_active_user_email');
+                    localStorage.removeItem(`user_${activeEmail}`);
+                    
+                    window.location.replace('login.html'); 
+                } else {
+                    alert(`Security Error: ${result.error}`);
+                }
+            } catch (err) {
+                alert("Network error. Could not connect to the server.");
+            } finally {
+                deleteBtn.innerHTML = originalText;
+                deleteBtn.disabled = false;
+            }
+        }
+    });
+
 });
 
 }
 
 // unit testing UT-01, UT-02
-module.exports = { validateEmail, validatePassword };
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { validateEmail, validatePassword };
+}

@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 
 const goalSchema = new mongoose.Schema({
-    email: { type: String, required: true }, // Links the goal to the specific user
+    // Links the goal to the specific user
+    email: { type: String, required: true }, 
     name: { type: String, required: true },
     amount: { type: Number, required: true },
     date: { type: String, required: true },
