@@ -23,9 +23,6 @@ const calculateCountdown = (targetDate) => {
     return 6; 
 };
 
-// 2. ONLY AT THE VERY BOTTOM, export them
-module.exports = { calculateROI, calculateCompound, calculateProgress, calculateCountdown };
-
 exports.handler = async function(event, context) {
     await connectDB();
 
@@ -66,4 +63,10 @@ exports.handler = async function(event, context) {
 };
 
 // unit testing UT-07, UT-08, UT-05, UT-06
-module.exports = { calculateROI, calculateCompound, calculateProgress, calculateCountdown };
+module.exports = { 
+    handler: exports.handler, // Keep the Netlify handler active!
+    calculateROI, 
+    calculateCompound, 
+    calculateProgress, 
+    calculateCountdown 
+};

@@ -297,6 +297,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             localStorage.setItem('finplan_session', Date.now());
                             localStorage.setItem('finplan_active_user_email', currentLoginEmail);
                             localStorage.setItem(`user_${currentLoginEmail}`, JSON.stringify(result.user));
+                            localStorage.setItem('finplan_userName', result.user.name);
                             window.location.href = 'dashboard.html';
                         }
                     } else {

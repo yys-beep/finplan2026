@@ -91,6 +91,12 @@ async function initDashboardCharts() {
     if (welcomeEl) {
         welcomeEl.textContent = `Welcome back, ${userData.name || 'User'}!`;
     }
+    if (navGreeting && userData.name) {
+        // Split the name by spaces and grab the first item [0]
+        const firstName = userData.name.trim().split(' ')[0]; 
+        navGreeting.textContent = `Hello, ${firstName}!`;
+    }
+    
     document.getElementById('statIncome').textContent = `RM ${(parseFloat(userData.income) || 0).toLocaleString('en-MY', { minimumFractionDigits: 2 })}`;
     document.getElementById('statRisk').textContent = userData.risk || '---';
     document.getElementById('statJob').textContent = userData.employment || '---';

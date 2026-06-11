@@ -36,7 +36,7 @@
             </div>
 
             <span class="text-white d-none d-sm-inline opacity-75 small border-end pe-3" id="navGreeting">
-                Hello, Yeoh!
+                Hello, User!
             </span>
 
             <button id="logoutBtn" class="btn btn-pill-logout py-1 px-3">
@@ -269,6 +269,26 @@
                 .catch(err => console.log('⚠️ SW Registration failed: ', err));
         });
     }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // 1. Grab the HTML element by its ID
+        const navGreeting = document.getElementById('navGreeting');
+        
+        // 2. Retrieve the logged-in user's data from localStorage
+        // Note: Change 'finplan_userName' to whatever key you used during login
+        const userName = localStorage.getItem('finplan_userName');
+        console.log('Retrieved userName from localStorage:', userName); // Debugging line
+        
+        // 3. Update the text dynamically
+        if (userName) {
+            // If a name is found, display it
+            navGreeting.innerHTML = `Hello, ${userName}!`;
+        } else {
+            // Fallback if the name is missing
+            navGreeting.innerHTML = `Hello, User!`;
+        }
+    });
 </script>
+
 </body>
 </html>
