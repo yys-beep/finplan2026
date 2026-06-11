@@ -101,16 +101,16 @@ finplan2026/
     ```bash
         npm install
 
-3.  **Environment Setup:**
-    Create a `.env` file in the root directory and configure the following:
-    *   MongoDB connection string
-    *   NewsAPI key
-    *   Alpha Vantage API key
-    *   Email service credentials
+3. **Environment Setup (CRITICAL FOR GRADING):**
+   To ensure all modules (Database, Market Insights, AI Tips, and 2FA) function correctly during local testing, please use the provided grading credentials:
+   * Open the `database-credentials.txt` file included in this submission.
+   * Create a new file named `.env` in the root directory of the project.
+   * Copy the entire environment variables block from the text file and paste it directly into your `.env` file.
 
 4.  **Running Locally:**
     ```bash
         npm start
+        Or using Netlify Dev: netlify dev
         Then open your browser and navigate to: `http://localhost:3000`
 
 ---
